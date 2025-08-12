@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neptune AI Chat</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.0;
+        height: 80vh;
+        margin: 0;
+      }
+      /* Chat container occupies available vertical space */
+      .chat-container {
+        height: calc(100vh - 56px - 70px); /* 56px for navbar, approx. 70px for input area */
+        padding: 20px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+      }
+      /* Chat input area styling */
+      .chat-input {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+      }
+      /* Base styling for chat message boxes */
+      .chat-message {
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        max-width: 70%;
+        background-color: #f1f1f1;
+        border-radius: 50px;
+      }
+      /* LLM message on left */
+      .chat-message.llm {
+        text-align: left;
+      }
+      /* User message on right */
+      .chat-message.user {
+        text-align: right;
+        margin-left: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Neptune AI</a>
+        <div class="d-flex">
+          <!-- Memory Button -->
+          <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#memoryModal">
+            Memory
+          </button>
+          <!-- Logout Option -->
+          <a href="/" class="btn btn-outline-light">Logout</a>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Chat Interface -->
+    <div class="chat-container" id="chatContainer">
+      <!-- Sample LLM Chat Message (left aligned) -->
+      <div class="chat-message llm">
+        <p><strong>Neptune:</strong> Welcome to Neptune AI chat. How can I assist you today?</p>
+      </div>
+     
+      
+    </div>
+    
+    <!-- Chat Input Area -->
+    <div class="chat-input">
+      <div class="container">
+        <form id="chatForm">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Type your message..." aria-label="Message" id="chatInput">
+            <button class="btn btn-primary" type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Memory Modal -->
+    <div class="modal fade" id="memoryModal" tabindex="-1" aria-labelledby="memoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="memoryModalLabel">Memory</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Table displaying memory entries from API -->
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Understanding</th>
+                </tr>
+              </thead>
+              <tbody id="memoryTableBody">
+                <!-- Rows will be dynamically populated -->
+              </tbody>
+            </table>
+            <script>
+              async function fetchMemory() {
+                try {
+                  const response = await fetch('/memory');
+                  if (!response.ok) {
+                    throw new Error('Failed to fetch memory data.');
+                  }
+                  const data = await response.json();
+                  const tableBody = document.getElementById('memoryTableBody');
+                  tableBody.innerHTML = ''; // Clear existing rows
+                  const sortedData = data.sort((a, b) => b.order - a.order);
+                  sortedData.forEach(entry => {
+                    const row = document.createElement('tr');
+                    const timeCell = document.createElement('td');
+                    const messageCell = document.createElement('td');
+                    const formatTimeAgo = (datetime) => {
+                      const secondsAgo = Math.floor((new Date() - new Date(datetime)) / 1000);
+                      if (secondsAgo < 60) return `${secondsAgo} seconds ago`;
+                      const minutesAgo = Math.floor(secondsAgo / 60);
+                      if (minutesAgo < 60) return `${minutesAgo} minutes ago`;
+                      const hoursAgo = Math.floor(minutesAgo / 60);
+                      if (hoursAgo < 24) return `${hoursAgo} hours ago`;
+                      const daysAgo = Math.floor(hoursAgo / 24);
+                      return `${daysAgo} days ago`;
+                    };
+                    timeCell.textContent = formatTimeAgo(entry.datetime);
+                    messageCell.textContent = entry.user_messege;
+                    row.appendChild(timeCell);
+                    row.appendChild(messageCell);
+                    tableBody.appendChild(row);
+                  });
+                } catch (error) {
+                  console.error('Error fetching memory:', error);
+                }
+              }
+
+              // Fetch memory data when modal is shown
+              document.getElementById('memoryModal').addEventListener('shown.bs.modal', fetchMemory);
+            </script>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Simple script to handle chat submission -->
+    <script>
+      document.getElementById('chatForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+    
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        const chatContainer = document.getElementById('chatContainer');
+    
+        if (!message) return;
+    
+        // 1) append the user message
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.classList.add('chat-message', 'user');
+        userMessageDiv.innerHTML = `<p><strong>User:</strong> ${message}</p>`;
+        chatContainer.appendChild(userMessageDiv);
+    
+        // 2) create the LLM placeholder
+        const llmMessageDiv = document.createElement('div');
+        llmMessageDiv.classList.add('chat-message', 'llm');
+        // use a span *without* an id
+        llmMessageDiv.innerHTML = `<p><strong>Neptune:</strong> <span class="llm-text"></span></p>`;
+        chatContainer.appendChild(llmMessageDiv);
+    
+        // grab *this* span and keep a reference to it
+        const llmTextSpan = llmMessageDiv.querySelector('.llm-text');
+    
+        // clear input & scroll
+        input.value = '';
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+        try {
+          const response = await fetch('/chat_endpoint', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+    
+          if (!response.body) {
+            throw new Error('Streaming not supported in this browser.');
+          }
+    
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+    
+          // 3) stream in chunks and append to *this* llmTextSpan
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value);
+            llmTextSpan.innerHTML = buffer;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+          }
+        } catch (err) {
+          console.error('Error while fetching the response:', err);
+          llmTextSpan.textContent = '⚠️ Something went wrong.';
+        }
+      });
+    </script>
+    
+      
+  </body>
+</html>
