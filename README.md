@@ -4,8 +4,6 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
-![Last Commit](https://img.shields.io/github/last-commit/yourusername/neptune)  
-![Repo Size](https://img.shields.io/github/repo-size/yourusername/neptune)  
 
 > An AI-powered personal assistant that combines intelligent conversation, real-time data retrieval, and a clean local chat interface — all built with Python and modern web technologies.
 
@@ -48,7 +46,7 @@ Built with a **modular architecture** and loosely following the **MVC pattern**,
 ---
 
 ## 📂 Folder Structure
-neptune/
+```neptune/
 │── app/
 │   ├── templates/          # HTML templates (UI)
 │   ├── utils/              # Utility scripts/helpers
@@ -58,7 +56,7 @@ neptune/
 │── chat_memory.json        # Summarised memory storage
 │── requirements.txt        # Project dependencies
 │── run.sh                  # Local server launch script
-
+```
 
 ---
 
@@ -66,51 +64,82 @@ neptune/
 
 ### 1️⃣ Clone Repository
 Pull the project from GitHub:
-```bash
-git clone https://github.com/yourusername/neptune.git
-cd neptune
 
-### 2️⃣ Activate Environment
+```
+git clone https://github.com/VARDAAN17/Personal-Virtual-Assistant---NEPTUNE.git
+cd Personal-Virtual-Assistant---NEPTUNE
+```
+
+### 2️⃣ Create & Activate Virtual Environment
+Create a virtual environment:
+
+```
+python3 -m venv venv
+```
+Activate the virtual environment:
+
+```
 source venv/bin/activate
-(
-    if virtual environment is already created, if not, use following to create virtual env:
-          python -m venv venv
-)
+```
 
 ### 3️⃣ Install Dependencies
+Install all required Python libraries:
+
+```
 pip install -r requirements.txt
+pip install uvicorn
+```
 
-###4️⃣ Initialize Server
+### 4️⃣ Configure API Keys
+Set your API keys before running the application:
+```
+ - If using .env file → Add your keys there.
+ - If using hardcoded values → Add them in app/main.py.
+```
+
+### 5️⃣ Initialize Server Environment
+Run the setup script:
+
+```
 bash run.sh
+```
 
-### 5️⃣ Start Backend
-python app/main.py
+### 6️⃣ Start Backend with Uvicorn
+Run Uvicorn from the project root:
+``` 
+uvicorn app.main:app --host 0.0.0.0 --port 7000 --reload
+```
 
-💡 Access the application in your browser at shown URLs.
-
-💡 Example Usage
-Login using the predefined credentials.
-
-Ask Neptune for:
-
-“What’s the weather in London today?”
-
-“Find flights from Delhi to Mumbai on 'date'.”
-
-“Search jobs in Data Analytics in 'location'.”
-
-“Explain quantum computing in simple terms.”
+### 7️⃣ Access the Application
+Open your browser and go to:
+```
+http://127.0.0.1:7000
+```
 
 
-📚 What I Learned
-Prompt engineering for LLMs
+## 💡 **Example Usage Login using the predefined credentials.**
 
-API handling and integration
+**Ask Neptune for:**
 
-Structuring JSON for conversation memory
+**·** “What’s the weather in London today?”
 
-Modular app architecture with FastAPI
+**·** “Find flights from Delhi to Mumbai on 'date'.”
 
-Building a simple, responsive chat interface
+**·** “Search jobs in Data Analytics in 'location'.”
+
+**·** “Explain quantum computing in simple terms.”
+
+
+## 📚 **What I Learned**
+
+**·** Prompt engineering for LLMs.
+
+**·** API handling and integration.
+
+**·** Structuring JSON for conversation memory.
+
+**·** Modular app architecture with FastAPI.
+
+**·** Building a simple, responsive chat interface.
 
 
