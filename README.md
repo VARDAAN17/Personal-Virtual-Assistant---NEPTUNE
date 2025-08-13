@@ -48,3 +48,69 @@ Built with a **modular architecture** and loosely following the **MVC pattern**,
 ---
 
 ## 📂 Folder Structure
+neptune/
+│── app/
+│   ├── templates/          # HTML templates (UI)
+│   ├── utils/              # Utility scripts/helpers
+│   └── main.py             # Main FastAPI backend & routing
+│── .gitignore
+│── README.md
+│── chat_memory.json        # Summarised memory storage
+│── requirements.txt        # Project dependencies
+│── run.sh                  # Local server launch script
+
+
+---
+
+## ⚙ Installation & Startup Process
+
+### 1️⃣ Clone Repository
+Pull the project from GitHub:
+```bash
+git clone https://github.com/yourusername/neptune.git
+cd neptune
+
+### 2️⃣ Activate Environment
+source venv/bin/activate
+(
+    if virtual environment is already created, if not, use following to create virtual env:
+          python -m venv venv
+)
+
+### 3️⃣ Install Dependencies
+pip install -r requirements.txt
+
+###4️⃣ Initialize Server
+bash run.sh
+
+### 5️⃣ Start Backend
+python app/main.py
+
+💡 Access the application in your browser at shown URLs.
+
+💡 Example Usage
+Login using the predefined credentials.
+
+Ask Neptune for:
+
+“What’s the weather in London today?”
+
+“Find flights from Delhi to Mumbai on 'date'.”
+
+“Search jobs in Data Analytics in 'location'.”
+
+“Explain quantum computing in simple terms.”
+
+
+📚 What I Learned
+Prompt engineering for LLMs
+
+API handling and integration
+
+Structuring JSON for conversation memory
+
+Modular app architecture with FastAPI
+
+Building a simple, responsive chat interface
+
+
