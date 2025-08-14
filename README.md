@@ -11,8 +11,7 @@
 
 ## 📌 Overview
 **Neptune** is a modular AI assistant designed to provide real-time information and handle multiple tasks in a single interface.  
-It integrates **OpenAI’s GPT-4o mini** for natural language interaction, stores summarised conversation memory in JSON,  
-and connects with APIs like **SerpAPI** for flight, job, and weather searches.
+It integrates **OpenAI’s GPT-4o mini** for natural language interaction, stores summarised conversation memory in JSON, and connects with APIs like **SerpAPI** for flight, job, and weather searches.
 
 Built with a **modular architecture** and loosely following the **MVC pattern**, Neptune is maintainable, scalable, and easy to extend with new features.
 
